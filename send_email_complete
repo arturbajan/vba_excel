@@ -1,0 +1,36 @@
+
+'references  Microsoft Outlook xx Object Library
+Sub send_email_complete()
+Dim outlookApp As Outlook.Application
+Dim myMail As Outlook.MailItem
+Dim source_file, to_emails, cc_emails As String
+Dim ow As Long
+Dim To_list As String
+Set outlookApp = New Outlook.Application
+Set myMail = outlookApp.CreateItem(olMailItem)
+ThisWorkbook.RefreshAll
+
+With Sheets("email_send")
+ow = .Cells(Rows.Count, 1).End(xlUp).Row
+For i = 2 To ow Step 1
+    to_emails = .Cells(i, 1) & ";"
+'    cc_emails = "tszulikowski@aliorleasing.pl" 'cc_emails & Cells(i, 2) & ";"
+To_list = To_list & to_emails
+Next i
+End With
+
+
+ThisWorkbook.Save
+
+With myMail
+'.CC = cc_emails
+.To = To_list
+.Subject = "Ugody wg. stanu " & Mid(Now(), 1, 10)
+.Body = "W załączeniu raport stanu ugód.," & vbNewLine & "Niniejsza wiadomość została wygenerowana automatycznie." & vbNewLine & "Alior Leasing Katowice"
+.Attachments.Add ThisWorkbook.Path & "\UGODY_B_Szramek.xlsb"
+
+.Display
+'.Send
+
+End With
+End Sub
